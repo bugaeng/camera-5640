@@ -2,7 +2,6 @@
 #include "ESP32_OV5640_AF.h"
 #include <WiFi.h>
 // #include <LiquidCrystal_I2C.h>
-// #include <Wire.h>
 
 #define CAMERA_MODEL_AI_THINKER
 #define PWDN_GPIO_NUM 32
@@ -25,12 +24,8 @@
 // LiquidCrystal_I2C lcd(0x27, 16,2);
 OV5640 ov5640 = OV5640();
 
-const char* ssid = "2F_es_room";
-const char* password = "0424719222";
-// const char* ssid = "wid";
-// const char* password = "qnrud1002";
-// const char* ssid = "2F_es_room";
-// const char* password = "0424719222";
+const char* ssid = "********";
+const char* password = "********";
 
 void startCameraServer();
 void setupLedFlash(int pin);
@@ -86,16 +81,19 @@ void setup() {
     Serial.println("OV5640_Auto_Focus Successful!");
   }
 
-  // drop down frame size for higher initial frame rate
   if(config.pixel_format == PIXFORMAT_JPEG){
     sensor->set_framesize(sensor, FRAMESIZE_VGA);
   }
 
-// Setup LED FLash if LED pin is defined in camera_pins.h
 #if defined(LED_GPIO_NUM)
   setupLedFlash(LED_GPIO_NUM);
 #endif
 
+  IPAddress ip (000, 000, 0, 00);
+  IPAddress gateway (000, 000, 0, 0);
+  IPAddress subnet (000, 000, 000, 000);
+  WiFi.config (ip, gateway, subnet);
+  
   WiFi.begin(ssid, password);
   WiFi.setSleep(false);
 
@@ -103,6 +101,7 @@ void setup() {
     delay(500);
     Serial.print(".");
     //lcd.print(".");
+    //lcd.clear();
   }
   Serial.println("");
   Serial.println("WiFi connected");
@@ -120,8 +119,7 @@ void setup() {
   Serial.print("Camera Ready! Use 'http://");
   Serial.print(WiFi.localIP());
   Serial.println("' to connect");
-
-
+  
   // lcd.setCursor(0,0);
   // lcd.print("Connect IP");
   // lcd.setCursor(0,1);
